@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import preprocessor, helpers
+import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # load data
 df = pd.read_csv('data/athlete_events.csv')
@@ -37,3 +40,49 @@ if user_menu == 'Medal Tally':
         st.title(selected_country + " performance in " + str(selected_year) + " Olympics")
     st.table(medal_tally)
 
+if user_menu == 'Overall Analysis':
+
+    st.title("Top :rainbow[Statistics]")
+
+    editions, cities, sports, events, athletes, nations = helpers.top_stats(df)
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.header('Editions')
+        st.title(f':red[{editions}]')
+    with col2:
+        st.header("Cities")
+        st.title(f':red[{cities}]')
+    with col3:
+        st.header("Sports")
+        st.title(f':red[{sports}]')
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.header('Events')
+        st.title(f':red[{events}]')
+    with col2:
+        st.header("Athletes")
+        st.title(f':red[{athletes}]')
+    with col3:
+        st.header("Nations")
+        st.title(f':red[{nations}]')
+
+    st.title(':rainbow[Participating Nations] over the years')
+    nations_over_time = helpers.data_over_time(df, 'region')
+    fig = px.line(nations_over_time, x="Edition", y="region")
+    st.plotly_chart(fig)
+    
+    st.title(":rainbow[Events] over the years")
+    events_over_time = helpers.data_over_time(df, 'Event')
+    fig = px.line(events_over_time, x="Edition", y="Event")
+    st.plotly_chart(fig)
+
+    st.title(":rainbow[Athletes] over the years")
+    athlete_over_time = helpers.data_over_time(df, 'Name')
+    fig = px.line(athlete_over_time, x="Edition", y="Name")
+    st.plotly_chart(fig)
+
+    st.title(":rainbow[No. of Events] over the years (Every Sport)")
+    fig, ax = plt.subplots(figsize=(20,20))
+    x = df.drop_duplicates(['Year', 'Sport', 'Event'])
+    sns.heatmap(x.pivot_table(index='Sport', columns='Year', values='Event', aggfunc='count').fillna(0).astype('int'), annot=True)
+    st.pyplot(fig)

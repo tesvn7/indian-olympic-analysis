@@ -52,4 +52,21 @@ def country_year_list(df):
     countries.insert(0,'Overall')
 
     return years, countries
+
+def top_stats(df):
+    editions = df['Year'].unique().shape[0] - 1    
+    cities = df['City'].unique().shape[0]     
+    sports = df['Sport'].unique().shape[0]     
+    events = df['Event'].unique().shape[0]     
+    athletes = df['Name'].unique().shape[0]     
+    nations = df['region'].unique().shape[0]
+
+    return editions, cities, sports, events, athletes, nations
+
+def data_over_time(df, col):
     
+    data_over_time = df.drop_duplicates(['Year', col])['Year'].value_counts().reset_index().sort_values('Year')
+    data_over_time.rename(columns={'Year': 'Edition', 'count': col}, inplace=True)
+
+    return data_over_time
+
