@@ -95,3 +95,30 @@ if user_menu == 'Overall Analysis':
     selected_sport = st.selectbox('Select a Sport',sport_list)
     x = helpers.most_successful(df,selected_sport)
     st.table(x)
+
+if user_menu == 'Country-wise-Analysis':
+
+    st.sidebar.title('Country-wise Analysis')
+
+    country_list = df['region'].dropna().unique().tolist()
+    country_list.sort()
+
+    selected_country = st.sidebar.selectbox('Select a Country',country_list)
+    
+    # Line Plot : Year wise Medal Tally
+    st.title(selected_country + " :rainbow[Medal Tally] over the years")
+    country_df = helpers.yearwise_medal_tally(df,selected_country)
+    fig = px.line(country_df, x="Year", y="Medal")
+    st.plotly_chart(fig)
+
+    # Heatmap : Year wise Medal Tally in every Sport
+    st.title(selected_country + " :rainbow[excels] in the following sports")
+    pt = helpers.country_event_heatmap(df,selected_country)
+    fig, ax = plt.subplots(figsize=(20, 20))
+    ax = sns.heatmap(pt,annot=True)
+    st.pyplot(fig)
+
+    # Table : Top 10 Athletes of a country, medal wise
+    st.title(":rainbow[Top 10 athletes] of " + selected_country)
+    top10_df = helpers.most_successful_countrywise(df,selected_country)
+    st.table(top10_df)
