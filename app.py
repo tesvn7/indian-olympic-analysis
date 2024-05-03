@@ -13,15 +13,22 @@ img = Image.open('assets/olympics-2.jpeg')
 # Set the page configuration to use the wide-view, width
 st.set_page_config(page_title= 'Olympics Analysis', page_icon=img, layout="wide", initial_sidebar_state="expanded")
 
-# load data
-@st.cache_data
-def load_data():
-   df = pd.read_csv('data/athlete_events.csv') 
-   region_df = pd.read_csv('data/noc_regions.csv')
-   df = preprocessor.preprocess(df, region_df)
-   return df
+# Loading the model via pickle file
+@st.cache_resource
+def load_model():
+    try:
+        df = pd.read_csv('data/athlete_events.csv') 
+        region_df = pd.read_csv('data/noc_regions.csv')
+        df = preprocessor.preprocess(df, region_df)
+        return df
+    except FileNotFoundError:
+        st.error('database files not found.')
+        return None
+    except Exception as e:
+        st.error('Error loading model', e)
+        return None
 
-df = load_data()
+df = load_model()
 
 # create sidebar
 st.sidebar.image(img,channels='RGB', use_column_width=True) 
