@@ -2,7 +2,7 @@
 ![Logo](https://raw.githubusercontent.com/tesvn7/web-image-hosting/main/olympics-cover.jpeg)
 
 
-# Olympics Analysis Dashboard  |  🌍 [Live](https://da-olympics.onrender.com/)
+# Olympics Analysis Dashboard  |  🌍 [Live](https://indian-olympic-analysis.streamlit.app)
 
 This is an interactive web dashboard for exploring Olympics history data using Streamlit. It analyzes athlete demographics, medal counts, sports performance, and more.
 
